@@ -20,15 +20,28 @@ app.get('/block',async (req, res) => {
 //the solve 
 app.get('/blockv2', async (req, res) => {
     console.log('Starting async delay...');
-    await new Promise(resolve => setTimeout(resolve, 5000)); // Asynchronous delay
+    await new Promise(resolve => setTimeout(resolve, 20000)); // Asynchronous delay
+    console.log('Done without blocking!');
     res.send('Done without blocking!');
   });
 
 // Non-blocking route
 app.get('/', (req, res) => {
   res.send('Hello, Express!');
+  console.log('Non-blocking route called');
 });
 
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
+
+// monitor the eventloop
+function monitorEventLoop() {
+    const start = Date.now();
+    setTimeout(() => {
+      const delay = Date.now() - start;
+      console.log(`Event loop delay: ${delay}ms`);
+    }, 1000); // Expected to run in ~1000ms
+  }
+  
+  setInterval(monitorEventLoop, 2000)
